@@ -1,0 +1,45 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      transportProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+transportModel  GermanCarreauWLF;
+
+//Hostalen GD 9550 F
+GermanCarreauWLFCoeffs
+{
+    nuA nuA [0 2 -1 0 0 0 0] 12.87; // nuA is the kinematic viscosity at zero shear rate (nu = eta/rho)
+    B   B   [0 0  1 0 0 0 0] 0.1871;// B determines where the slope starts
+    C   C   [0 0  0 0 0 0 0] 0.655; // C shows how steep the slope is
+    Ts  Ts  [0 0  0 1 0 0 0] 237;   // Ts is the standard temperature. Typically "Einfriertemperatur" +50 K
+    Tm  Tm  [0 0  0 1 0 0 0] 473;   // Tm is the temperature in KELVIN at which the parameters nuA, B, C were measured
+}
+
+// rho is density in kg/m³
+rho		rho [1 -3 0 0 0 0 0] 0736;
+
+// c is the heat capacity
+cfluid  cfluid  [0 2 -2 -1 0 0 0] 2900;
+csolid  csolid  [0 2 -2 -1 0 0 0] 466;
+
+// DT is the thermal diffusivity (german literature alpha_t). is defined as: (thermal conductivity kappa or lambda) / (density*c)
+DTfluid	DTfluid [0 2 -1 0 0 0 0] 1.1997e-7;
+DTsolid DTsolid [0 2 -1 0 0 0 0] 1e-5;
+
+// DConc is the diffusion coefficient for a passive scalar
+DConcfluid	DConcfluid  [0 2 -1 0 0 0 0] 1e-12;
+DConcsolid	DConcsolid  [0 2 -1 0 0 0 0] 0.0;
+DConca      DConca      [0 2 -1 0 0 0 0] 1e-4;
+
+// ************************************************************************* //

@@ -1,0 +1,63 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      T;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 0 0 1 0 0 0];
+
+internalField   uniform 493.15;
+
+boundaryField
+{
+    inlet
+    {
+        type            codedFixedValue;
+        value           uniform 473.15;
+        redirectType    temperatureProfileInlet;
+
+        // core profile using polynomial f(r)= k * (a*r⁴+b*r³+c*r²+d*r+e) + T
+        code
+        #{
+            const fvPatch& boundaryPatch = patch(); 
+            const vectorField& Cf = boundaryPatch.Cf();
+            scalarField& field = *this;
+
+            forAll(Cf, faceI)
+            {
+                scalar k = 1.5;
+		        scalar a = -1*10^8;
+		        scalar b = 0;
+		        scalar c = -44430;
+		        scalar d = 0;
+		        scalar e = 31.615;
+		        scalar T = 473.15;
+		        scalar r = sqrt(Cf[faceI].y()*Cf[faceI].y() + Cf[faceI].z()*Cf[faceI].z());
+                field[faceI] = ( a*r*r*r*r + b*r*r*r + c*r*r + d*r + e ) * k + T;
+            }
+        #};
+    }
+
+    defaultName
+    {
+        type            fixedValue;
+	    value		    uniform 493.15;
+    }
+
+    outlet
+    {
+        type            zeroGradient;
+    }
+}
+
+// ************************************************************************* //

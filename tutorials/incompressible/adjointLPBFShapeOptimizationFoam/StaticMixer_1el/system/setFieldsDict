@@ -1,0 +1,80 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      setFieldsDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+defaultFieldValues
+(
+    volScalarFieldValue alpha 2e9
+    volScalarFieldValue alphaFixed 1
+);
+
+regions
+(
+    cylinderToCell
+    {
+        p1      (-0.03 0 0);
+        p2      ( 0.03 0 0);
+        radius  0.02;
+
+        fieldValues
+        (
+            volScalarFieldValue alpha 0
+            volScalarFieldValue alphaFixed 0
+        );
+    }
+
+    surfaceToCell
+	{
+        file            "STL/initialGeometry.stl";
+
+        outsidePoints	((0.024 0 0));
+        useSurfaceOrientation false;
+
+        //enable one of the following five
+        nearDistance 	-1;			//-1 means deactivated, otherwise: pick all cells within [value] m of geometry.stl
+        includeInside	true;		// pick all cells entirely within the geometry.stl
+        includeOutside	false;		// pick all cells entirely outside of geometry.stl
+        includeCut		true;		// pick all cells intersected by geometry.stl
+        curvature		-100;		//-100 means deactivated, combine this with nearDistance
+
+        fieldValues
+        (
+            volScalarFieldValue alpha 2e9
+        );
+    }
+
+    surfaceToCell
+    {
+        file            "STL/scaffoldStructure.stl";
+
+        outsidePoints	((0.024 0 0));
+        useSurfaceOrientation true;
+
+        //enable one of the following five
+        nearDistance 	-1;			//-1 means deactivated, otherwise: pick all cells within [value] m of geometry.stl
+        includeInside	true;		// pick all cells entirely within the geometry.stl
+        includeOutside	false;		// pick all cells entirely outside of geometry.stl
+        includeCut		false;		// pick all cells intersected by geometry.stl
+        curvature		-100;		//-100 means deactivated, combine this with nearDistance
+
+        fieldValues
+        (
+            volScalarFieldValue alpha 2e9
+            volScalarFieldValue alphaFixed 1
+        );
+    }
+);
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

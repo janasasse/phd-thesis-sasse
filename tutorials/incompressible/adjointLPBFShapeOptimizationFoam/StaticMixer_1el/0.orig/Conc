@@ -1,0 +1,58 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      Conc;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 -3 0 0 0 0 0];
+
+internalField   uniform 0.0;
+
+boundaryField
+{
+    defaultFaces
+    {
+        type            empty;
+    }
+
+    inlet
+    {
+        type            codedFixedValue;
+        value           uniform 0.0;
+        redirectType    concentrationProfileInlet;
+
+        // half profile using logistic function
+        code
+        #{
+            const fvPatch& boundaryPatch = patch();
+            const vectorField& Cf = boundaryPatch.Cf();
+            scalarField& field = *this;
+            forAll(Cf, faceI)
+            {
+                field[faceI] = 1 / (1 + exp(-2000 * Cf[faceI].z() ));
+            }
+        #};
+    }
+
+    defaultName
+    {
+        type            zeroGradient;
+    }
+
+    outlet
+    {
+        type            zeroGradient;
+    }
+}
+
+// ************************************************************************* //

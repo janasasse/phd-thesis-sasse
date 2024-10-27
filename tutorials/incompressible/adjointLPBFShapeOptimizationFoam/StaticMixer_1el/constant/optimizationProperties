@@ -1,0 +1,37 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version         2;
+    format          ascii;
+    class           dictionary;
+    object          optimizationProperties;
+}
+
+initialization  no;
+
+alphaMax        alphaMax [ 0 0 -1 0 0 0 0 ] 2e+09;
+
+lambdaU         lambdaU [ 0 -2 1 0 0 0 0 ] 5e+11;
+
+lambdaT         lambdaT [ 0 -2 1 0 0 0 0 ] 500000;
+
+lambdaC         lambdaC [ 0 -2 1 0 0 0 0 ] 5e+07;
+
+wP              wP [ 0 0 0 0 0 0 0 ] 1;
+
+wT              wT [ 0 0 0 0 0 0 0 ] 0;
+
+wC              wC [ 0 0 0 0 0 0 0 ] 0;
+
+targetTemperature targetTemperature [ 0 0 0 1 0 0 0 ] 473.15;
+
+targetConcentration targetConcentration [ 0 -3 0 0 0 0 0 ] 0.5;
+
+
+// ************************************************************************* //

@@ -1,0 +1,166 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+//credit goes to Bloerb of cfd-online.com
+//https://www.cfd-online.com/Forums/openfoam-meshing/61796-could-anyone-post-simple-cylinder-mesh-2.html#post671347
+
+convertToMeters 0.001;
+
+ra1 20.5; // radius in mm
+
+le1 -25;//25; // start
+le2 25;//25; // end
+
+a1p #calc "0.35*$ra1*sin(degToRad(45.0))";
+a2p #calc "0.900*$ra1*sin(degToRad(45.0))";
+a3p #calc "1.000*$ra1*sin(degToRad(45.0))";
+a1n #calc "-$a1p";
+a2n #calc "-$a2p";
+a3n #calc "-$a3p";
+
+ap1 #calc " 0.278*$ra1";
+an1 #calc "-0.278*$ra1";
+ap2 #calc " 0.900*$ra1";
+an2 #calc "-0.900*$ra1";
+ap3 #calc " 1.000*$ra1";
+an3 #calc "-1.000*$ra1";
+
+xa 50; // mesh resolution
+ya 50; // mesh resolution
+za 50; // mesh resolution
+
+vertices
+(
+    name a00 ($a1n $a1n $le1)
+    name a01 ($a1p $a1n $le1)
+    name a02 ($a1p $a1p $le1)
+    name a03 ($a1n $a1p $le1)
+
+    name a04 ($a2n $a2n $le1)
+    name a05 ($a2p $a2n $le1)
+    name a06 ($a2p $a2p $le1)
+    name a07 ($a2n $a2p $le1)
+
+    name a08 ($a3n $a3n $le1)
+    name a09 ($a3p $a3n $le1)
+    name a10 ($a3p $a3p $le1)
+    name a11 ($a3n $a3p $le1)
+
+    name b00 ($a1n $a1n $le2)
+    name b01 ($a1p $a1n $le2)
+    name b02 ($a1p $a1p $le2)
+    name b03 ($a1n $a1p $le2)
+
+    name b04 ($a2n $a2n $le2)
+    name b05 ($a2p $a2n $le2)
+    name b06 ($a2p $a2p $le2)
+    name b07 ($a2n $a2p $le2)
+
+    name b08 ($a3n $a3n $le2)
+    name b09 ($a3p $a3n $le2)
+    name b10 ($a3p $a3p $le2)
+    name b11 ($a3n $a3p $le2)
+);                
+
+blocks
+(
+    hex (a00 a01 a02 a03 b00 b01 b02 b03) fluid ($ya $ya $za) simpleGrading (1 1 1) 
+
+    hex (a06 a02 a01 a05 b06 b02 b01 b05) fluid ($xa $ya $za) simpleGrading (1 1 1) 
+    hex (a07 a03 a02 a06 b07 b03 b02 b06) fluid ($xa $ya $za) simpleGrading (1 1 1) 
+    hex (a04 a00 a03 a07 b04 b00 b03 b07) fluid ($xa $ya $za) simpleGrading (1 1 1) 
+    hex (a05 a01 a00 a04 b05 b01 b00 b04) fluid ($xa $ya $za) simpleGrading (1 1 1) 
+
+    hex (a10 a06 a05 a09 b10 b06 b05 b09) fluid (19 $ya $za) simpleGrading (5 1 1)
+    hex (a11 a07 a06 a10 b11 b07 b06 b10) fluid (19 $ya $za) simpleGrading (5 1 1) 
+    hex (a08 a04 a07 a11 b08 b04 b07 b11) fluid (19 $ya $za) simpleGrading (5 1 1) 
+    hex (a09 a05 a04 a08 b09 b05 b04 b08) fluid (19 $ya $za) simpleGrading (5 1 1)
+);
+
+edges
+(
+    arc a00 a01 (0    $an1 $le1)
+    arc a01 a02 ($ap1 0    $le1)
+    arc a02 a03 (0    $ap1 $le1)
+    arc a03 a00 ($an1 0    $le1)
+
+    arc a04 a05 (0    $an2 $le1)
+    arc a05 a06 ($ap2 0    $le1)
+    arc a06 a07 (0    $ap2 $le1)
+    arc a07 a04 ($an2 0    $le1)
+
+    arc a08 a09 (0    $an3 $le1)
+    arc a09 a10 ($ap3 0    $le1)
+    arc a10 a11 (0    $ap3 $le1)
+    arc a11 a08 ($an3 0    $le1)
+
+    arc b00 b01 (0    $an1 $le2)
+    arc b01 b02 ($ap1 0    $le2)
+    arc b02 b03 (0    $ap1 $le2)
+    arc b03 b00 ($an1 0    $le2)
+
+    arc b04 b05 (0    $an2 $le2)
+    arc b05 b06 ($ap2 0    $le2)
+    arc b06 b07 (0    $ap2 $le2)
+    arc b07 b04 ($an2 0    $le2)
+
+    arc b08 b09 (0    $an3 $le2)
+    arc b09 b10 ($ap3 0    $le2)
+    arc b10 b11 (0    $ap3 $le2)
+    arc b11 b08 ($an3 0    $le2)
+);
+   
+defaultPatch
+{
+    name defaultName;
+    type wall;
+}   
+
+boundary
+( 
+    inlet
+    {
+        type wall;
+        faces
+        (
+            (0 4)
+            (1 4)
+            (2 4)
+            (3 4)
+            (4 4)
+            (5 4)
+            (6 4)
+            (7 4)
+            (8 4)
+        );
+    } 
+    outlet
+    {
+        type wall; 
+        faces
+        (
+            (0 5)
+            (1 5)
+            (2 5)
+            (3 5)
+            (4 5)
+            (5 5)
+            (6 5)
+            (7 5)
+            (8 5)
+        );
+    }   
+);
